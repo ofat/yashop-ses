@@ -48,6 +48,9 @@
 * @version 0.8.3
 * @package AmazonSimpleEmailService
 */
+
+namespace yashop\ses\libs;
+
 class SimpleEmailService
 {
 	protected $__accessKey; // AWS Access key

@@ -6,6 +6,9 @@
 * @version 0.8.3
 * @package AmazonSimpleEmailService
 */
+
+namespace yashop\ses\libs;
+
 final class SimpleEmailServiceMessage {
 
 	// these are public for convenience only
