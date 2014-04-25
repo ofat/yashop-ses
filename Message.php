@@ -63,6 +63,20 @@ class Message extends BaseMessage
     private $subject;
 
     /**
+     * @var integer Sending time for debugging
+     */
+    private $time;
+
+    /**
+     * In Yii2 dev panel some bug and this method have to return information about result of sending
+     * @return \yashop\ses\Message Message class instance.
+     */
+    public function getSwiftMessage()
+    {
+        return $this;
+    }
+
+    /**
      * @return \yashop\ses\libs\SimpleEmailServiceMessage Simple Email Service message instance.
      */
     public function getSesMessage()
@@ -108,9 +122,10 @@ class Message extends BaseMessage
      */
     public function setFrom($from)
     {
-        $this->getSesMessage()->setFrom($from);
-
-        $this->from = $from;
+        list($address) = array_keys($from);
+        $name = $from[$address];
+        $this->from = '"'.$name.'" <'.$address.'>';
+        $this->getSesMessage()->setFrom($this->from);
 
         return $this;
     }
@@ -234,6 +249,14 @@ class Message extends BaseMessage
     /**
      * @inheritdoc
      */
+    public function getBody()
+    {
+        return $this->messageText;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function setBody($text, $html = null)
     {
         $this->getSesMessage()->setMessageFromString($text, $html);
@@ -299,5 +322,23 @@ class Message extends BaseMessage
     public function toString()
     {
         return $this->getSesMessage()->getRawMessage();
+    }
+
+    public function setDate($time)
+    {
+        $this->time = $time;
+
+        return $this;
+    }
+
+    public function getDate()
+    {
+        return $this->time;
+    }
+
+    public function getHeaders()
+    {
+        //todo: make headers for debug
+        return '';
     }
 }

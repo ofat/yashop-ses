@@ -81,7 +81,11 @@ class Mailer extends BaseMailer
         }
         Yii::info('Sending email "' . $message->getSubject() . '" to "' . $address . '"', __METHOD__);
 
-        return $this->getSES()->sendEmail($message->getSesMessage());
+        $res = $this->getSES()->sendEmail($message->getSesMessage());
+
+        $message->setDate(time());
+
+        return count($res) > 0;
     }
 
 }
