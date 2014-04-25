@@ -27,15 +27,13 @@
  *     ->send();
  * ~~~
  *
- * @property array|\Swift_Mailer $swiftMailer Swift mailer instance or array configuration. This property is
- * read-only.
- * @property array|\Swift_Transport $transport This property is read-only.
- *
  * @author Vitaliy Ofat <ofatv22@gmail.com>
  */
 
 namespace yashop\ses;
 
+use yashop\ses\libs\SimpleEmailService;
+use Yii;
 use yii\mail\BaseMailer;
 
 class Mailer extends BaseMailer
@@ -45,14 +43,45 @@ class Mailer extends BaseMailer
      */
     public $messageClass = 'yashop\ses\Message';
 
-    /*
+    /**
      * @var string Amazon ses api access key
      */
     public $access_key;
 
-    /*
+    /**
      * @var string Amazon ses api secret key
      */
     public $secret_key;
+
+    /**
+     * @var \yashop\ses\libs\SimpleEmailService SimpleEmailService instance.
+     */
+    private $_ses;
+
+    /**
+     * @return \yashop\ses\libs\SimpleEmailService SimpleEmailService instance.
+     */
+    public function getSES()
+    {
+        if (!is_object($this->_ses)) {
+            $this->_ses = new SimpleEmailService($this->access_key, $this->secret_key);
+        }
+
+        return $this->_ses;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function sendMessage($message)
+    {
+        $address = $message->getTo();
+        if (is_array($address)) {
+            $address = implode(', ', array_keys($address));
+        }
+        Yii::info('Sending email "' . $message->getSubject() . '" to "' . $address . '"', __METHOD__);
+
+        return $this->getSES()->sendEmail($message->getSesMessage());
+    }
 
 }

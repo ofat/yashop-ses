@@ -1,0 +1,24 @@
+{
+    "name": "yashop-ses/yii2-yashop-ses",
+    "description": "Extension for sending emails via amazon ses. Part of YaShop",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","ses","aws"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vitaliy Ofat",
+            "email": "ofatv22@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "yashop\\ses\\": ""
+        }
+    },
+    "repositories":[
+        {
+            "type": "git",
+            "url": "https://github.com/ofat/yashop-ses"
+        }
+    ]
+}
