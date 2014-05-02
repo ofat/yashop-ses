@@ -1,5 +1,5 @@
 {
-    "name": "yashop/yii2-yashop-ses",
+    "name": "ofat/yii2-yashop-ses",
     "description": "Extension for sending emails via amazon ses",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","ses","aws"],
