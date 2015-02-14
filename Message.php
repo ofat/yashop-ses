@@ -123,7 +123,7 @@ class Message extends BaseMessage
     public function setFrom($from, $name = null)
     {
         if (!isset($name)) {
-            $name = gethostbyaddr($_SERVER['SERVER_ADDR']);
+            $name = gethostname();
         }
         if (!is_array($from) && isset($name)) {
             $from = array($from => $name);
