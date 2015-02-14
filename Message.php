@@ -120,8 +120,14 @@ class Message extends BaseMessage
     /**
      * @inheritdoc
      */
-    public function setFrom($from)
+    public function setFrom($from, $name = null)
     {
+        if (!isset($name)) {
+            $name = gethostbyaddr($_SERVER['SERVER_ADDR']);
+        }
+        if (!is_array($from) && isset($name)) {
+            $from = array($from => $name);
+        }
         list($address) = array_keys($from);
         $name = $from[$address];
         $this->from = '"'.$name.'" <'.$address.'>';
