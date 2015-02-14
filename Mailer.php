@@ -54,6 +54,11 @@ class Mailer extends BaseMailer
     public $secret_key;
 
     /**
+     * @var string A default from address to send email
+     */
+    public $default_from;
+
+    /**
      * @var \yashop\ses\libs\SimpleEmailService SimpleEmailService instance.
      */
     private $_ses;
@@ -81,6 +86,9 @@ class Mailer extends BaseMailer
         }
         Yii::info('Sending email "' . $message->getSubject() . '" to "' . $address . '"', __METHOD__);
 
+        if ( is_null($message->getFrom()) && isset($this->default_from)) {
+            $this->getSesMessage()->setFrom($this->from);
+        }
         $res = $this->getSES()->sendEmail($message->getSesMessage());
 
         $message->setDate(time());
