@@ -54,6 +54,11 @@ class Mailer extends BaseMailer
     public $secret_key;
 
     /**
+     * @var string Amazon ses host
+     */
+    public $host;
+
+    /**
      * @var \yashop\ses\libs\SimpleEmailService SimpleEmailService instance.
      */
     private $_ses;
@@ -64,7 +69,7 @@ class Mailer extends BaseMailer
     public function getSES()
     {
         if (!is_object($this->_ses)) {
-            $this->_ses = new SimpleEmailService($this->access_key, $this->secret_key);
+            $this->_ses = new SimpleEmailService($this->access_key, $this->secret_key, $this->host);
         }
 
         return $this->_ses;
