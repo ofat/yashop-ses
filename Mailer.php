@@ -61,7 +61,7 @@ class Mailer extends BaseMailer
     /**
      * @var string Amazon ses host
      */
-    public $host;
+    public $host = 'email.us-east-1.amazonaws.com';
 
     /**
      * @var \yashop\ses\libs\SimpleEmailService SimpleEmailService instance.
