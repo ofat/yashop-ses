@@ -33,7 +33,8 @@ To use this extension, you should configure it in the application configuration 
     'mail' => [
         'class' => 'yashop\ses\Mailer',
         'access_key' => 'Your access key',
-        'secret_key' => 'Your secret key'
+        'secret_key' => 'Your secret key',
+        'host' => 'email.us-east-1.amazonaws.com' // not required
     ],
     ...
 ],
