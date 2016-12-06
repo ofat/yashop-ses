@@ -18,6 +18,7 @@ final class SimpleEmailServiceMessage {
 	public $subject, $messagetext, $messagehtml;
 	public $subjectCharset, $messageTextCharset, $messageHtmlCharset;
 	public $attachments = array();
+	public $headers = [];
 
 	function __construct() {
 		$this->to = array();
@@ -35,6 +36,8 @@ final class SimpleEmailServiceMessage {
 		$this->subjectCharset = null;
 		$this->messageTextCharset = null;
 		$this->messageHtmlCharset = null;
+
+		$this->headers = [];
 	}
 
 
@@ -77,6 +80,14 @@ final class SimpleEmailServiceMessage {
 		else {
 			$this->replyto = array_merge($this->replyto, $replyto);
 		}
+	}
+
+	function addTextHeader($key, $value) {
+		if (!$key) {
+			return;
+		}
+
+		$this->headers[] = [$key => $value];
 	}
 
 	function setFrom($from) {
@@ -198,6 +209,13 @@ final class SimpleEmailServiceMessage {
 				$raw_message .= 'Subject: =?' . $this->subjectCharset . '?B?' . base64_encode($this->subject) . '?=' . "\n";
 			}
 		}
+
+		foreach ($this->headers as &$header) {
+			foreach ($header as $key => $value) {
+				$raw_message .= $key . ': ' . $value . "\n";
+			}
+		}
+
 		$raw_message .= 'MIME-Version: 1.0' . "\n";
 		$raw_message .= 'Content-type: Multipart/Mixed; boundary="' . $boundary . '"' . "\n";
 		$raw_message .= "\n--{$boundary}\n";

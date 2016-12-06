@@ -347,4 +347,11 @@ class Message extends BaseMessage
         //todo: make headers for debug
         return '';
     }
+
+    public function setHeader($key, $value)
+    {
+        $this->getSesMessage()->addTextHeader($key, $value);
+
+        return $this;
+    }
 }
