@@ -48,3 +48,39 @@ Yii::$app->mail->compose('contact/html', ['contactForm' => $form])
     ->setTo($form->email)
     ->setSubject($form->subject)
     ->send();
+```
+
+
+To send an email with headers, you may use the following code:
+
+```php
+Yii::$app->mail->compose('contact/html', ['contactForm' => $form])
+    ->setFrom('from@domain.com')
+    ->setTo($form->email)
+    ->setSubject($form->subject)
+    ->setHeader('Precedence', 'bulk')
+    ->setHeader('List-id', '<1>')
+    ->setHeader('List-Unsubscribe', Url::to(['user/unsubscribe'], true))
+    ->send();
+```
+
+Increase the speed of sending emails:
+
+```php
+Yii::$app->mailer->getSES()->enableVerifyHost(false);
+Yii::$app->mailer->getSES()->enableVerifyPeer(false);
+Yii::$app->mailer->getSES()->enableKeepAlive();
+
+foreach ($emails as $email) {
+    Yii::$app->mail->compose('delivery/mail', [])
+        ->setFrom('from@domain.com')
+        ->setTo($email)
+        ->setSubject($subject)
+        ->setHeader('Precedence', 'bulk')
+        ->setHeader('List-id', '<1>')
+        ->setHeader('List-Unsubscribe', Url::to(['user/unsubscribe'], true))
+        ->send();
+}
+
+Yii::$app->mailer->getSES()->enableKeepAlive(false);
+```

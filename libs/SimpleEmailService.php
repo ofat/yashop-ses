@@ -64,6 +64,11 @@ class SimpleEmailService
 	protected $__verifyHost = 1;
 	protected $__verifyPeer = 1;
 
+	protected $__curl = false;
+
+	public function getCurl() { return $this->__curl; }
+	public function setCurl($curl) { $this->__curl = $curl; }
+
 	// verifyHost and verifyPeer determine whether curl verifies ssl certificates.
 	// It may be necessary to disable these checks on certain systems.
 	// These only have an effect if SSL is enabled.
@@ -85,6 +90,25 @@ class SimpleEmailService
 			$this->setAuth($accessKey, $secretKey);
 		}
 		$this->__host = $host;
+	}
+
+	function __destruct() {
+		if ($this->__curl && $this->__curl !== true) {
+			@curl_close($this->__curl);
+			$this->__curl = null;
+		}
+	}
+
+	public function enableKeepAlive($enable = true) {
+		if (!$enable) {
+			if ($this->__curl && $this->__curl !== true) {
+				@curl_close($this->__curl);
+			}
+
+			$this->__curl = false;
+		} else if ($enable && $this->__curl === false) {
+			$this->__curl = true;
+		}
 	}
 
 	/**
@@ -273,7 +297,7 @@ class SimpleEmailService
 		}
 
 		$rest = new SimpleEmailServiceRequest($this, 'POST');
-		$action = empty($sesMessage->attachments) ? 'SendEmail' : 'SendRawEmail';
+		$action = empty($sesMessage->attachments) && empty($sesMessage->headers) ? 'SendEmail' : 'SendRawEmail';
 		$rest->setParameter('Action', $action);
 
 		if($action == 'SendRawEmail') {
@@ -375,7 +399,7 @@ class SimpleEmailService
 			trigger_error($message, E_USER_WARNING);
 		}
 		else {
-			trigger_error(sprintf("SimpleEmailService::%s(): Encountered an error: %s", $functionname, $error), E_USER_WARNING);
+			trigger_error(sprintf("SimpleEmailService::%s(): Encountered an error: %s", $functionname, serialize($error)), E_USER_WARNING);
 		}
 	}
 }

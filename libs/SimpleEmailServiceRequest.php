@@ -94,7 +94,18 @@ final class SimpleEmailServiceRequest
 		$url = 'https://'.$this->ses->getHost().'/';
 
 		// Basic setup
-		$curl = curl_init();
+		$curl = $this->ses->getCurl();
+
+		if ($curl === true) {
+			$curl = curl_init();
+			curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+			$this->ses->setCurl($curl);
+		}
+
+		if (!$curl) {
+			$curl = curl_init();
+		}
+
 		curl_setopt($curl, CURLOPT_USERAGENT, 'SimpleEmailService/php');
 
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, ($this->ses->verifyHost() ? 2 : 0));
@@ -140,7 +151,9 @@ final class SimpleEmailServiceRequest
 			);
 		}
 
-		@curl_close($curl);
+		if (!$this->ses->getCurl()) {
+			@curl_close($curl);
+		}
 
 		// Parse body into XML
 		if ($this->response->error === false && isset($this->response->body)) {
