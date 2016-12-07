@@ -375,7 +375,7 @@ class SimpleEmailService
 			trigger_error($message, E_USER_WARNING);
 		}
 		else {
-			trigger_error(sprintf("SimpleEmailService::%s(): Encountered an error: %s", $functionname, $error), E_USER_WARNING);
+			trigger_error(sprintf("SimpleEmailService::%s(): Encountered an error: %s", $functionname, serialize($error)), E_USER_WARNING);
 		}
 	}
 }
