@@ -273,7 +273,7 @@ class SimpleEmailService
 		}
 
 		$rest = new SimpleEmailServiceRequest($this, 'POST');
-		$action = empty($sesMessage->attachments) ? 'SendEmail' : 'SendRawEmail';
+		$action = empty($sesMessage->attachments) && empty($sesMessage->headers) ? 'SendEmail' : 'SendRawEmail';
 		$rest->setParameter('Action', $action);
 
 		if($action == 'SendRawEmail') {
