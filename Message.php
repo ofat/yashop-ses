@@ -226,6 +226,7 @@ class Message extends BaseMessage
     public function setSubject($subject)
     {
         $this->getSesMessage()->setSubject($subject);
+        $this->subject = $subject;
 
         return $this;
     }
